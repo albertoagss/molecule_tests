@@ -1,0 +1,13 @@
+---
+driver:
+  name: docker
+platforms:
+  - name: RedHat-ubi8
+    image: redhat/ubi8:latest
+    privileged: true
+    pre_build_image: true
+
+  - name: Debian11.9
+    image: debian:11.9
+    privileged: true
+    pre_build_image: true

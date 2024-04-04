@@ -1,0 +1,39 @@
+---
+- name: Crear lista
+  set_fact:
+    list: "{{ deb_pkgs.split(',') }}"
+  when: deb_pkgs | default("null", false)
+
+- name: Seleccionar los paquetes que no deben ser actualizados
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items:
+    - "{{ list }}"
+  when: deb_pkgs | default("null", false)
+
+- name: Actualizar cache
+  apt:
+    update_cache: yes
+  retries: 3
+  delay: 10
+
+- name: Actualizar todos los paquetes, excluyendo los indicados
+  apt:
+    name: "*"
+    state: latest
+  retries: 3
+  delay: 10
+
+- debug:
+    msg: "{{ item }} not upgraded"
+  with_items: "{{ list }}"
+  when: deb_pkgs | default("null", false)
+
+- name: Permitir a los paquetes ser actualizados de nuevo
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: install
+  with_items:
+    - "{{ list }}"
+  when: deb_pkgs | default("null", false)
