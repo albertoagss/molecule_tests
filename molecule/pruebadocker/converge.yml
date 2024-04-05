@@ -1,0 +1,17 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  
+  roles:
+          - role: centos_upgrade
+            when: ansible_distribution == "RedHat"
+
+          - role: debian_upgrade
+            when: ansible_distribution == "Debian"
+            
+          - role: apache_centos
+            when: ansible_distribution == "RedHat"
+
+          - role: apache_debian
+            when: ansible_distribution == "Debian"
