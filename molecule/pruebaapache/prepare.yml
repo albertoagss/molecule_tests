@@ -1,0 +1,21 @@
+---
+
+- name: Pretasks for Apache installation
+  hosts: all
+  gather_facts: yes
+  tasks:
+          - name: Actualizar paquetes - UBI
+            when: ansible_distribution == "RedHat"
+            yum:
+                    name: "*"
+                    state: latest
+            retries: 3
+            delay: 10
+
+          - name: Actualizar paquetes - DEBIAN
+            when: ansible_distribution == "Debian"
+            apt:
+                    name: "*"
+                    state: latest
+            retries: 3
+            delay: 10

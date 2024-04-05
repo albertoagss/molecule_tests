@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  
+  tasks:
+    - name: Replace this task with one that validates your content
+      ansible.builtin.debug:
+        msg: "This is the effective test"
+
+  roles:
+          - role: apache_centos
+            when: ansible_distribution == "RedHat"
+
+          - role: apache_debian
+            when: ansible_distribution == "Debian"
