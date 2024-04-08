@@ -24,6 +24,7 @@
           service: http
           permanent: true
           state: enabled
+  ignore_errors: true
   register: firewalld_result
 
 - name: Reiniciar firewall
