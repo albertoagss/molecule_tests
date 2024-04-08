@@ -4,18 +4,30 @@
   hosts: all
   gather_facts: yes
   tasks:
-          - name: Actualizar paquetes - UBI
+#          - name: Actualizar paquetes - UBI
+#            when: ansible_distribution == "RedHat"
+#            yum:
+#                    name: "*"
+#                    state: latest
+#            retries: 3
+#            delay: 10
+
+#          - name: Actualizar paquetes - DEBIAN
+#            when: ansible_distribution == "Debian"
+#            apt:
+#                    name: "*"
+#                    state: latest
+#            retries: 3
+#            delay: 10
+
+          - name: Instalar sudo - UBI
             when: ansible_distribution == "RedHat"
             yum:
-                    name: "*"
-                    state: latest
-            retries: 3
-            delay: 10
+                    name: sudo
+                    state: present
 
-          - name: Actualizar paquetes - DEBIAN
+          - name: Instalar sudo - DEBIAN
             when: ansible_distribution == "Debian"
             apt:
-                    name: "*"
-                    state: latest
-            retries: 3
-            delay: 10
+                    name: sudo
+                    state: present
