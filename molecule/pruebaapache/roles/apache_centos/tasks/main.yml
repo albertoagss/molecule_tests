@@ -69,4 +69,5 @@
   reboot:
           reboot_timeout: 30
           post_reboot_delay: 30
+  ignore_errors: true
   when: selinux_result is success
