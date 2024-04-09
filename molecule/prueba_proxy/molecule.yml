@@ -2,6 +2,21 @@
 driver:
   name: docker
 platforms:
-  - name: instance
-    image: quay.io/centos/centos:stream8
-    pre_build_image: true
+        - name: RedHat-ubi8
+          image: ubi8/python:latest
+          published_ports:
+                  - 8080:80
+          privileged: true
+          pre_build_image: true
+          ansible_python_interpreter: /usr/bin/python3
+          # Para que systemd inicie
+          command: /usr/sbin/init
+          registry: false
+
+        - name: Debian11
+          image: debian/python:11.9
+          published_ports:
+                  - 9090:80
+          privileged: true
+          pre_build_image: true
+          ansible_python_interpreter: /usr/bin/python3
