@@ -1,6 +1,10 @@
 ---
 driver:
   name: docker
+
+verifier:
+  name: ansible
+
 platforms:
 ########### CLIENTE 1 UBI8 #####################
 
