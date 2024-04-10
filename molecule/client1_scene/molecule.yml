@@ -43,37 +43,10 @@ platforms:
     image: wordpress/python:latest
     published_ports:
             - 7070:80
-    privileged: true
     pre_build_image: true
     # Crear red
     networks:
             - name: "apachewordpress"
               ipv4_address: '10.30.50.30'
-    environment:
-            WORDPRESS_DB_HOST: db
-            WORDPRESS_DB_USER: prueba
-            WORDPRESS_DB_PASSWORD: 1234
-            WORDPRESS_DB_NAME: bdwordpress
     volumes:
-            - "wordpress:/var/www/html"
-
-############ MYSQL PRUEBA ######################
-
-  - name: mysql
-    image: mysql:8.0
-    published_ports:
-            - 3306:3306
-    privileged: true
-    pre_build_image: true
-    # Crear red
-    networks:
-            - name: "apachewordpress"
-              ipv4_address: '10.30.50.40'
-    environment:
-            MYSQL_DATABASE: bdwordpress
-            MYSQL_USER: prueba
-            MYSQL_PASSWORD: 1234
-            MYSQL_RANDOM_ROOT_PASSWORD: '1'
-    volumes:
-            - "db:/var/lib/mysql"
-
+            - "/home/vagrant/molecule_tests/molecule/client1_scene/wordpress_template:/var/www/html"

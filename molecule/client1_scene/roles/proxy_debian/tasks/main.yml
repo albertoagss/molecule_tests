@@ -30,7 +30,13 @@
           creates: /etc/apache2/sites-enabled/proxy.conf
   register: proxy_result
 
-- name: Reiniciar apacke
+- name: Deshabilitar config predeterminada
+  command: a2dissite 000-default.conf
+  args:
+          chdir: /etc/apache2/sites-available/
+  when: proxy_result is success
+
+- name: Reiniciar apache
   service:
           name: apache2
           state: restarted
