@@ -1,0 +1,20 @@
+---
+- name: Verify
+  hosts: RedHat-ubi8, Debian11
+  gather_facts: true
+  tasks:
+          - name: Check if httpd is up and running
+            uri:
+                    url: http://localhost
+                    method: POST
+                    return_content: yes
+                    validate_certs: no
+                    status_code:
+                            - 302
+            register: uri_output
+            failed_when: uri_output.status != 302
+
+          - name: Success message
+            debug:
+                    msg: "Proxy redirects correctly"
+            when: uri_output is success

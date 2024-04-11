@@ -17,11 +17,13 @@
   apache2_module:
           name: proxy_http
           state: present
+  register: module_result
 
 - name: Reiniciar apache
   service:
           name: apache2
           state: restarted
+  when: module_result is changed
 
 - name: Habilitar configuración del proxy
   command: a2ensite proxy.conf
@@ -34,10 +36,10 @@
   command: a2dissite 000-default.conf
   args:
           chdir: /etc/apache2/sites-available/
-  when: proxy_result is success
+  when: proxy_result is changed
 
 - name: Reiniciar apache
   service:
           name: apache2
           state: restarted
-  when: proxy_result is success
+  when: proxy_result is changed

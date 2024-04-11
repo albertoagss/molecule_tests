@@ -1,7 +1,7 @@
 ---
 
-- name: Pretask for Client1 (Apache as Reverse Proxy
-  hosts: all
+- name: Pretask for Client1 (Apache as Reverse Proxy)
+  hosts: RedHat-ubi8, Debian11, Wordpress
   gather_facts: yes
   tasks:
           - name: Instalar sudo - UBI
@@ -15,3 +15,9 @@
             apt:
                     name: sudo
                     state: present
+
+          - name: Reiniciar Apache - WORDPRESS
+            when: ansible_hostname == "Wordpress"
+            service:
+                    name: apache2
+                    state: restarted
