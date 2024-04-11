@@ -1,0 +1,23 @@
+---
+
+- name: Pretasks for Client3 (MariaDB Remote Server)
+  hosts: all
+  gather_facts: true
+  tasks:
+          - name: Instalar sudo - UBI
+            when: ansible_distribution == "RedHat"
+            yum:
+                    name: sudo
+                    state: present
+
+          - name: Instalar sudo - DEBIAN
+            when: ansible_distribution == "Debian"
+            apt:
+                    name: sudo
+                    state: present
+
+          - name: Importar repo MariaDB
+            when: ansible_distribution == "RedHat"
+            template:
+                    src: templates/mariadb.repo
+                    dest: /etc/yum.repos.d/mariadb.repo

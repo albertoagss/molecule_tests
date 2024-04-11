@@ -1,7 +1,22 @@
 ---
 driver:
   name: docker
+
+verifier:
+  name: ansible
+
 platforms:
-  - name: instance
-    image: quay.io/centos/centos:stream8
+  - name: RedHat-ubi8
+    image: ubi8/pre-mariadb:latest
+    privileged: true
     pre_build_image: true
+    ansible_python_interpreter: /usr/bin/python3
+    # Para qu systemd inicie
+    command: /usr/sbin/init
+    registry: false
+
+  - name: Debian11
+    image: debian/python:11.9
+    privileged: true
+    pre_build_image: true
+    ansible_python_interpreter: /usr/bin/python3
