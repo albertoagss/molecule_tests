@@ -1,0 +1,30 @@
+---
+driver:
+  name: docker
+
+verifier:
+  name: ansible
+
+platforms:
+  - name: RedHat-ubi8
+    image: ubi8/python:latest
+    published_ports:
+            - 8080:80
+    privileged: true
+    pre_build_image: true
+    ansible_python_interpreter: /usr/bin/python3
+    # Para que systemd inicie
+    command: /usr/sbin/init
+    registry: false
+
+  - name: Debian11
+    image: debian/python:11.9
+    published_ports:
+            - 9090:80
+    privileged: true
+    pre_build_image: true
+    ansible_python_interpreter: /usr/bin/python3
+
+  - name: MariaDB
+    image: mariadb/test:latest
+    published_
