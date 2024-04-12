@@ -1,0 +1,41 @@
+---
+- name: Verify
+  hosts: RedHat-ubi8, Debian11
+  gather_facts: true
+  tasks:
+          - name: Comprobar si MariaDB está ejecutándose -- UBI
+            service:
+                    name: mysql
+                    state: started
+            register: mariadb_status_ubi
+            when: ansible_distribution == "RedHat"
+
+          - name: Comprobar si MariaDB está ejecutándose -- DEBIAN
+            service:
+                    name: mariadb
+                    state: started
+            register: mariadb_status_debian
+            when: ansible_distribution == "Debian"
+
+          - name: Print status -- UBI
+            debug:
+                    msg: "El servicio de MariaDB en UBI está {{ 'enabled. Starting...' if mariadb_status_ubi.changed else 'started.' }}"
+            when: ansible_distribution == "RedHat"
+
+          - name: Print status -- DEBIAN
+            debug:
+                    msg: "El servicio de MariaDB en DEBIAN está {{ 'enabled. Starting...' if mariadb_status_debian.changed else 'started.' }}"
+            when: ansible_distribution == "Debian"
+
+          - name: Check connection
+            mysql_db:
+                    login_user: wordpress-user
+                    login_password: 1234
+                    login_host: localhost
+                    db: bdwordpress
+                    state: present
+            register: mariadb_connectivity
+
+          - name: Print result
+            debug:
+                    msg: "La conexión a mariadb con el usuario wordpress-user fue {{ 'fallida' if mariadb_connectivity.changed else 'exitosa' }}"

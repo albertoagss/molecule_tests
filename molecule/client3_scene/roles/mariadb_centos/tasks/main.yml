@@ -53,10 +53,11 @@
           state: present
   when: firewalld_result is failed
 
-- name: Abrir puerto para httpd con iptables
+- name: Abrir puerto para mariadb con iptables
   iptables:
           chain: INPUT
           protocol: tcp
           destination_port: 3306
           jump: ACCEPT
+
   when: firewalld_result is failed
