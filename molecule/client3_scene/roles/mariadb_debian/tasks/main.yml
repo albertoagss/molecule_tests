@@ -8,6 +8,7 @@
                   - python3-mysqldb
                   - ufw
           state: present
+  register: installation_result
 
 - name: Habilitar UFW
   ufw:
@@ -18,12 +19,14 @@
           name: mariadb
           enabled: true
           state: restarted
+  when: installation_result is changed
 
 - name: Ejecutar mysql_secure_installation y establecer una contraseña.
   shell: |
           echo -e "\nn\nY\nvagrant\nvagrant\nY\nn\nY\nY\n" | sudo mysql_secure_installation
   args:
    executable: /bin/bash
+  when: installation_result is changed
 
 - name: Establecer configuración Mariadb - Debian
   template:
@@ -32,12 +35,14 @@
           owner: root
           group: root
           mode: '0755'
+  register: config_result
 
 - name: Reiniciar MariaDB
   service:
           name: mariadb
           enabled: true
           state: restarted
+  when: config_result is changed
 
 - name: Crear base de datos para Wordpress
   mysql_db:

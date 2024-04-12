@@ -7,18 +7,21 @@
                 - python3
                 - python3-PyMySQL
         state: latest
+  register: installation_result
 
 - name: Reiniciar MariaDB
   service:
           name: mariadb
           enabled: true
           state: restarted
+  when: installation_result is changed
 
 - name: Ejecutar mariadb-secure-installation y establecer una contraseña.
   shell: |
           echo -e "\nn\nY\nvagrant\nvagrant\nY\nn\nY\nY\n" | sudo mariadb-secure-installation
   args:
    executable: /bin/bash
+  when: installation_result is changed
 
 - name: Crear base de datos para Wordpress
   mysql_db:
