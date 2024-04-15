@@ -9,13 +9,16 @@
 
   roles:
     - role: apache_centos
-      when: ansible_distribution == "RedHat"
+      when: ansible_hostname == "RedHat-ubi8"
 
     - role: apache_debian
-      when: ansible_distribution == "Debian"
+      when: ansible_hostname == "Debian11"
 
     - role: wordpress_centos
-      when: ansible_distribution == "RedHat"
+      when: ansible_hostname == "RedHat-ubi8"
 
     - role: wordpress_debian
-      when: ansible_distribution == "Debian"
+      when: ansible_hostname == "Debian11"
+
+    - role: mariadb_debian 
+      when: ansible_hostname == "Debian11-MariaDB"

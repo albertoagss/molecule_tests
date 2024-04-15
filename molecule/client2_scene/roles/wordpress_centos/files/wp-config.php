@@ -15,7 +15,7 @@
 define( 'DB_NAME', 'bdwordpress' );
 define( 'DB_USER', 'wordpress-user' );
 define( 'DB_PASSWORD', '1234' );
-define( 'DB_HOST', '192.168.10.62' );
+define( 'DB_HOST', '10.30.50.30' );
 define( 'DB_CHARSET', 'utf8mb4' );
 define( 'DB_COLLATE', '' );
 
@@ -33,7 +33,7 @@ define('NONCE_SALT',       'TO{!>:L?^j|+age{$fnY[~[|dhKNz`8.@$EI4/~DQ|4V&ws5D1[U
 $table_prefix = 'wp_';
 
 // Debugging
-define( 'WP_DEBUG', false);
+define( 'WP_DEBUG', true);
 
 // Ajustes de WordPress
 if ( ! defined( 'ABSPATH' ) ) {

@@ -10,6 +10,7 @@
         - php-xml
         - php-mbstring
         - php-mysqli
+        - php-json 
   register: php_installation
 
 - name: Iniciar servicio httpd
@@ -34,6 +35,7 @@
           owner: apache
           group: apache
           mode: '0644'
+  register: wp_config
 
 - name: Deshabilitar SeLinux
   template:
@@ -42,10 +44,9 @@
           owner: root
           group: root
           mode: '0644'
-  register: disable_selinux
 
 - name: Reiniciar servicio httpd
   service:
           name: httpd
           state: restarted
-  when: disable_selinux is changed
+  when: wp_config is changed

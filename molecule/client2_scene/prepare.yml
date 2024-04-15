@@ -1,7 +1,7 @@
 ---
 
 - name: Pretasks for Client2 (Apache + Wordpress)
-  hosts: RedHat-ubi8, Debian11
+  hosts: all
   gather_facts: true
   tasks:
           - name: Instalar sudo - UBI
