@@ -4,6 +4,8 @@
   apt:
           name: apache2
           state: latest
+  retries: 3
+  delay: 10
 
 - name: Iniciar servicio apache
   service:

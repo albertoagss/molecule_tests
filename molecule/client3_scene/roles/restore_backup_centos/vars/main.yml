@@ -1,0 +1,8 @@
+---
+
+backup_dir_redhat: "home/vagrant/backups/CentOS-server"
+backup_server: "localhost"
+
+login_user: "wordpress-user"
+login_password: "1234"
+db_name: "bdwordpress"
