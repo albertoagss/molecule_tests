@@ -1,8 +1,37 @@
 ---
 - name: Converge
   hosts: all
-  gather_facts: false
-  tasks:
-    - name: Replace this task with one that validates your content
-      ansible.builtin.debug:
-        msg: "This is the effective test"
+  gather_facts: true
+  roles:
+ 
+############### APACHE INSTALLATION ###############
+
+    - role: apache_centos
+      when: ansible_hostname == "RedHat-ubi8" or ansible_hostname == "Wordpress-ubi8"
+
+    - role: apache_debian
+      when: ansible_hostname == "Debian11" or ansible_hostname == "Wordpress-debian11"
+
+############### PROXY INSTALLATION ###############
+
+    - role: proxy_centos
+      when: ansible_hostname == "RedHat-ubi8"
+
+    - role: proxy_debian
+      when: ansible_hostname == "Debian11"
+
+############### WORDPRESS INSTALLATION ###############
+
+    - role: wordpress_centos
+      when: ansible_hostname == "Wordpress-ubi8"
+
+    - role: wordpress_debian
+      when: ansible_hostname == "Wordpress-debian11"
+
+############### MARIADB INSTALLATION ###############
+
+    - role: mariadb_centos
+      when: ansible_hostname == "Mariadb-ubi8"
+
+    - role: mariadb_debian
+      when: ansible_hostname == "Mariadb-debian11"

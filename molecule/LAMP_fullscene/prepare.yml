@@ -1,0 +1,27 @@
+---
+
+- name: Pretasks for LAMP full scene
+  hosts: all
+  gather_facts: true
+  tasks:
+          - name: Instalar sudo -- UBI
+            when: ansible_distribution == "RedHat"
+            yum:
+                    name: sudo
+                    state: present
+            retries: 3
+            delay: 10
+          
+          - name: Instalar sudo -- DEBIAN
+            when: ansible_distribution == "Debian"
+            apt:
+                    name: sudo
+                    state: present
+            retries: 3
+            delay: 10
+
+          - name: Importar repo Mariadb
+            when: ansible_hostname == "Mariadb-ubi8"
+            template:
+                    src: templates/mariadb.repo
+                    dest: /etc/yum.repos.d/mariadb.repo

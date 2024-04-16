@@ -1,7 +1,102 @@
 ---
 driver:
   name: docker
+
+verifier:
+  name: ansible
+  
 platforms:
-  - name: instance
-    image: quay.io/centos/centos:stream8
+
+############### CLIENTE 1 -- UBI8 ###############
+
+  - name: RedHat-ubi8
+    image: ubi8/python:latest
+    published_ports:
+            - 8080:80
+    privileged: true
     pre_build_image: true
+    ansible_python_interpreter: /usr/bin/python3
+    # Para que systemd inicie:
+    command: /usr/sbin/init
+    registry: false
+    # Crear red:
+    docker_networks:
+            - name: "LAMP-subnet"
+              ipam_config:
+                      - subnet: '10.30.50.0/24'
+    # Asignar IP:
+    networks:
+            - name: "LAMP-subnet"
+              ipv4_address: '10.30.50.10'
+
+############### CLIENTE 1 -- DEBIAN11 ###############
+
+  - name: Debian11
+    image: debian/python:11.9
+    published_ports:
+            - 9090:80
+    privileged: true
+    pre_build_image: true
+    ansible_python_interpreter: /usr/bin/python3
+    # Asignar IP:
+    networks:
+            - name: "LAMP-subnet"
+              ipv4_address: '10.30.50.20'
+
+############### CLIENTE 2 -- WORDPRESS -- UBI8 ###############
+
+  - name: Wordpress-ubi8
+    image: ubi8/python:latest
+    published_ports:
+            - 7070:80
+    privileged: true
+    pre_build_image: true
+    ansible_python_interpreter: /usr/bin/python3
+    # Para que systemd inicie:
+    command: /usr/sbin/init
+    registry: false
+    # Asignar IP:
+    networks:
+            - name: "LAMP-subnet"
+              ipv4_address: '10.30.50.12'
+
+############### CLIENTE 2 -- WORDPRESS -- DEBIAN11 ###############
+
+  - name: Wordpress-debian11
+    image: debian/python:11.9
+    published_ports:
+            - 7071:80
+    privileged: true
+    pre_build_image: true
+    ansible_python_interpreter: /usr/bin/python3
+    # Asignar IP:
+    networks:
+            - name: "LAMP-subnet"
+              ipv4_address: '10.30.50.22'
+
+############### CLIENTE 3 -- MARIADB -- UBI8 ###############
+
+  - name: Mariadb-ubi8
+    image: ubi8/pre-mariadb:latest
+    privileged: true
+    pre_build_image: true
+    ansible_python_interpreter: /usr/bin/python3
+    # Para que systemd inicie:
+    command: /usr/sbin/init
+    registry: false
+    # Asignar IP:
+    networks:
+            - name: "LAMP-subnet"
+              ipv4_address: '10.30.50.14'
+
+############### CLIENTE 3 -- MARIADB -- DEBIAN11 ###############
+
+  - name: Mariadb-debian11
+    image: debian/python:11.9
+    privileged: true
+    pre_build_image: true
+    ansible_python_interpreter: /usr/bin/python3
+    # Asignar IP:
+    networks:
+            - name: "LAMP-subnet"
+              ipv4_address: '10.30.50.24'

@@ -1,0 +1,66 @@
+---
+- name: Instalar MariaDB y módulos necesarios - CentOS
+  yum:
+        name:
+                - MariaDB-server
+                - MariaDB-client
+                - python3
+                - python3-PyMySQL
+        state: latest
+  register: installation_result
+
+- name: Reiniciar MariaDB
+  service:
+          name: mariadb
+          enabled: true
+          state: restarted
+  when: installation_result is changed
+
+- name: Ejecutar mariadb-secure-installation y establecer una contraseña.
+  shell: |
+          echo -e "\nn\nY\nvagrant\nvagrant\nY\nn\nY\nY\n" | sudo mariadb-secure-installation
+  args:
+   executable: /bin/bash
+  when: installation_result is changed
+
+- name: Crear base de datos para Wordpress
+  mysql_db:
+          name: bdwordpress
+          login_user: root
+          login_password: vagrant
+          login_host: localhost
+          state: present
+
+- name: Crear usuario para la base de datos
+  mysql_user:
+          name: wordpress-user
+          password: 1234
+          priv: 'bdwordpress.*:ALL,GRANT'
+          host: '%'
+          login_user: root
+          login_password: vagrant
+          login_host: localhost
+          state: present
+
+- name: Habilitar el servicio mysql en firewalld CentOS
+  firewalld:
+          service: mysql
+          permanent: true
+          state: enabled
+  ignore_errors: true
+  register: firewalld_result
+
+- name: Instalar iptables si firewalld no esta disponible
+  yum:
+          name: iptables
+          state: present
+  when: firewalld_result is failed
+
+- name: Abrir puerto para mariadb con iptables
+  iptables:
+          chain: INPUT
+          protocol: tcp
+          destination_port: 3306
+          jump: ACCEPT
+
+  when: firewalld_result is failed
