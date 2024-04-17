@@ -1,0 +1,17 @@
+---
+
+- name: Pretasks for MongoDB server
+  hosts: all
+  gather_facts: true
+  tasks:
+          - name: Instalar sudo - UBI
+            when: ansible_distribution == "RedHat"
+            yum:
+                    name: sudo
+                    state: present
+
+          - name: Instalar sudo - DEBIAN
+            when: ansible_distribution == "Debian"
+            apt:
+                    name: sudo 
+                    state: present

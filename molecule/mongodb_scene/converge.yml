@@ -14,3 +14,7 @@
 
           - role: mongodb_configuration_debian
             when: ansible_distribution == "Debian"
+
+          - role: mongodb_backup
+
+          - role: mongodb_restore_backup
