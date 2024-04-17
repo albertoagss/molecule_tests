@@ -1,0 +1,47 @@
+---
+- name: Añadir key del repo
+  rpm_key:
+          key: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
+  retries: 3
+  delay: 5
+
+- name: Instalar repo
+  yum_repository:
+          name: "mongodb-org-{{ mongodb_version }}"
+          description: "MongoDB Repository"
+          baseurl: "https://repo.mongodb.org/yum/redhat/{{ server_version }}/mongodb-org/{{ mongodb_version }}/x86_64/"
+          enabled: true
+
+- name: Instalar MongoDB y pip
+  become: yes
+  yum:
+          name:
+                  - mongodb-org
+                  - pip
+          state: present
+  retries: 3
+  delay: 5
+
+- name: Instalar PyMongo
+  become: yes
+  pip:
+          name: pymongo
+          state: present
+  retries: 3
+  delay: 5
+
+- name: Iniciar MongoDB
+  become: yes
+  service:
+          name: mongod
+          state: started
+          enabled: yes
+
+- name: Crear usuario administrador
+  community.mongodb.mongodb_user:
+          database: admin
+          name: "{{ admin_user }}"
+          password: "{{ admin_password }}"
+          state: present
+          roles: ["root"]
+

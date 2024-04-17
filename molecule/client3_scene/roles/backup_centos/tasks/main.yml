@@ -5,7 +5,7 @@
           state: directory
           mode: '0755'
 
-- name: Obeneter fecha y hora actual
+- name: Obtener fecha y hora actual
   set_fact:
           timestamp: "{{ ansible_date_time.date }}_{{ ansible_date_time.time }}"
 
@@ -26,6 +26,6 @@
 - name: Importar backup al control node CentOS
   fetch: 
         src: "/backup/{{ redhat_bd_name }}-RedHat_backup_{{ timestamp }}.sql"
-        dest: "/home/vagrant{{ backups_dir }}/CentOS-server/"
+        dest: "/home/vagrant{{ backups_dir }}/RedHat-server/"
         flat: yes
         when: result is success 

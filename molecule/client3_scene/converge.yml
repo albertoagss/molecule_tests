@@ -14,6 +14,12 @@
           - role: mariadb_debian
             when: ansible_distribution == "Debian"
 
+            #          - role: backup_centos
+            #            when: ansible_distribution == "RedHat"
+
+            #          - role: backup_debian
+            #            when: ansible_distribution == "Debian"
+
           - role: restore_backup_centos
             when: ansible_distribution == "RedHat"
 

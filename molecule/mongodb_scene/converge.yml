@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  roles:
+          - role: mongodb_centos
+            when: ansible_distribution == "RedHat"
+
+          - role: mongodb_debian
+            when: ansible_distribution == "Debian"
+
+          - role: mongodb_configuration_centos
+            when: ansible_distribution == "RedHat"
+
+          - role: mongodb_configuration_debian
+            when: ansible_distribution == "Debian"

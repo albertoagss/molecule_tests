@@ -1,0 +1,50 @@
+---
+- name: Instalación de los paquetes requeridos
+  apt:
+          name:
+                  - gnupg
+                  - curl
+                  - pip
+                  - ufw
+          state: present
+
+- name: Importación de la key del repositorio
+  apt_key:
+          url: "https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc"
+          state: present
+  retries: 3
+  delay: 5
+
+- name: Crear list file para MongoDB
+  apt_repository:
+          repo: "deb http://repo.mongodb.org/apt/{{ debian_version }}/mongodb-org/{{ mongodb_version }} main"
+          state: present
+
+- name: Instalar MongoDB
+  become: yes
+  yum:
+          name: mongodb-org
+          state: latest
+
+- name: Instalar PyMongo
+  become: yes
+  pip:
+          name: pymongo
+          state: present
+  retries: 3
+  delay: 10
+
+- name: Iniciar MongoDB
+  become: yes
+  service:
+          name: mongod
+          state: started
+          enabled: yes
+
+- name: Crear usuario administrador
+  community.mongodb.mongodb_user:
+          database: admin
+          name: "{{ admin_user }}"
+          password: "{{ admin_password }}"
+          state: present
+          roles: ["root"]

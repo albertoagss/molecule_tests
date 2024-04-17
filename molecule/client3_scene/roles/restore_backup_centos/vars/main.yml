@@ -1,6 +1,6 @@
 ---
 
-backup_dir_redhat: "home/vagrant/backups/CentOS-server"
+backup_dir_redhat: "/home/vagrant/backups/RedHat-server"
 backup_server: "localhost"
 
 login_user: "wordpress-user"

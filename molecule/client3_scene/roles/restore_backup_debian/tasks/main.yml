@@ -14,6 +14,10 @@
   register: found_files
   delegate_to: "{{ backup_server }}"
 
+- name: Comprobar content found_files
+  debug:
+    var: found_files
+
 - name: Seleccionar el último archivo
   set_fact:
     last_file: "{{ found_files.files | sort(attribute='mtime',reverse=true) | first }}"
@@ -23,6 +27,7 @@
   copy:
     src: "{{ last_file.path }}"
     dest: "/backup/restore.sql"
+  register: backup_copied
 
 - name: Restaurar base de datos
   mysql_db:
@@ -31,3 +36,4 @@
       name: "{{ db_name }}"
       state: import
       target: /backup/restore.sql
+  when: backup_copied is changed
