@@ -1,10 +1,13 @@
 ---
 
-admin_user: "admin"
+admin_user: "root"
 admin_password: 1234
+
+host: "localhost"
+port: "27017"
 
 db_name: "bd_prueba"
 collection_name: "collection_prueba"
 
-remote_user: "user_prueba"
+remote_username: "user_prueba"
 remote_password: 1234

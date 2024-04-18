@@ -1,0 +1,28 @@
+---
+- name: Verify
+  hosts: RedHat-ubi8, Debian11
+  gather_facts: true
+  tasks:
+          - name: Comprobar si MongoDB está ejecutandose -- UBI
+            when: ansible_distribution == "RedHat"
+            service:
+                    name: mongod
+                    state: started
+            register: mongodb_status_ubi
+
+          - name: Comprobar si MongoDB está ejecutándose -- DEBIAN
+            when: ansible_distribution == "Debian"
+            service:
+                    name: mongod
+                    state: started
+            register: mongodb_status_debian
+
+          - name: Print status -- UBI
+            when: ansible_distribution == "RedHat"
+            debug:
+                    msg: "El servicio mongod en UBI está {{ 'enabled. Starting...' if mongodb_status_ubi.changed else 'started.' }}"
+
+          - name: Print status -- DEBIAN
+            when: ansible_distribution == "Debian"
+            debug:
+                    msg: "El servicio mongod en DEBIAN está {{ 'enabled. Starting...' if mongodb_status_debian.changed else 'started.' }}

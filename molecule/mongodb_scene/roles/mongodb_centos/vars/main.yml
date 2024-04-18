@@ -1,7 +1,9 @@
 ---
 
-mongodb_version: "7.0"
-server_version: 9
+mongodb_version: "4.4"
+
+# It would be 8 if ubi8, 9 if centos9
+server_version: 8
 
 admin_user: "root"
 admin_password: "1234"

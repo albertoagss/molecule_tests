@@ -7,6 +7,8 @@
                   - pip
                   - ufw
           state: present
+  retries: 3
+  delay: 10
 
 - name: Importación de la key del repositorio
   apt_key:

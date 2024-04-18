@@ -5,8 +5,7 @@
           owner: root
           group: root
           mode: '0644'
-  # Usamos register y when para reemplazar a los handlers, ya que estos se ejecutan al final de todas las tareas
-  #     y pueden dar problemas por este motivo.
+  # Usamos register y when para reemplazar a los handlers, ya que estos se ejecutan al final de todas las tareas y pueden dar problemas por este motivo.
   register: restart
 
 - name: Reiniciar MongoDB
@@ -15,33 +14,56 @@
           state: restarted
   when: restart.changed
 
+############# ABRIR PUERTO PARA HTTP CON FIREWALLD #################
+#### SI FIREWALLD NO ESTÁ DISPONIBLE (COMO POR EJEMPLO EN UBI8) ####
+#### SE INSTALA Y SE ABRE EL PUERTO CON IPTABLES ###################
+
 - name: Abrir puerto de MongoDB
   firewalld:
           port: 27017/tcp
           permanent: true
           state: enabled
-  register: firewall
+  ignore_errors: true
+  register: firewall 
 
 - name: Reiniciar firewall
   systemd:
           name: firewalld
           state: restarted
-  when: firewall.changed
+  when: firewall is success
 
-- name: Crear base de datos
-  community.mongodb.mongodb_shell:
-          login_user: "{{ admin_user }}"
-          login_password: "{{ admin_password }}"
-          login_port: 27017
-          db: "{{ db_name }}"
-          eval: "db.createCollection('{{ collection_name }}')"
+- name: Instalar iptables si firewalld no está disponible  
+  yum:
+          name: iptables
+          state: present
+  when: firewall is failed
+  
+- name: Abrir puerto para mongodb con iptables
+  iptables:
+          chain: INPUT
+          protocol: tcp
+          destination_port: 27017
+          jump: ACCEPT
+  when: firewall is failed
+
+#######################################################################
+
+  #- name: Crear base de datos
+  #  community.mongodb.mongodb_shell:
+  #          login_user: "root"
+  #          login_password: "1234"
+  #          db: "bd_prueba"
+  #          eval: "db.createCollection('collection_prueba')"
+
+- name: Crear base de datos (modo cutre)
+  command: mongosh "mongodb://{{ admin_user }}:{{ admin_password }}@{{ host }}:{{ port }}/{{ db_name }}" --authenticationDatabase admin --eval "db.createCollection('{{ collection_name }}')"
 
 - name: Crear usuario para conexión remota
   community.mongodb.mongodb_user:
           login_user: "{{ admin_user }}"
           login_password: "{{ admin_password }}"
           db: "{{ db_name }}"
-          name: "{{ remote_user }}"
+          name: "{{ remote_username }}"
           password: "{{ remote_password }}"
           state: present
           roles:

@@ -9,9 +9,13 @@
             yum:
                     name: sudo
                     state: present
+            retries: 3
+            delay: 10
 
           - name: Instalar sudo - DEBIAN
             when: ansible_distribution == "Debian"
             apt:
                     name: sudo 
                     state: present
+            retries: 3
+            delay: 10

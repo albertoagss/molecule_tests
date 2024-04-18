@@ -14,9 +14,13 @@ platforms:
     # Para que systemd inicie:
     command: /usr/sbin/init
     registry: false
-
+    published_ports:
+            - 3000:27017
+          
   - name: Debian11
     image: debian/python:11.9
     privileged: true
     pre_build_image: true
     ansible_python_interpreter: /usr/bin/python3
+    published_ports:
+            - 3030:27017
