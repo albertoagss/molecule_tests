@@ -1,6 +1,6 @@
 ---
 - name: Verify
-  hosts: RedHat-ubi8, Debian11
+  hosts: all
   gather_facts: true
   tasks:
           - name: Comprobar si MongoDB está ejecutandose -- UBI
@@ -25,4 +25,20 @@
           - name: Print status -- DEBIAN
             when: ansible_distribution == "Debian"
             debug:
-                    msg: "El servicio mongod en DEBIAN está {{ 'enabled. Starting...' if mongodb_status_debian.changed else 'started.' }}
+                    msg: "El servicio mongod en DEBIAN está {{ 'enabled. Starting...' if mongodb_status_debian.changed else 'started.' }}"
+
+#          - name: Check if backup is restored
+#            community.mongodb.mongodb_shell:
+#                    login_user: "root"
+#                    login_password: "1234"
+#                    db: "bd_prueba"
+#                    eval: "db.getCollectionNames()"
+#            register: test
+
+          - name: Check if backup is restored (modo cutre)
+            command: mongosh "mongodb://root:1234@localhost:27017/bd_prueba" --authenticationDatabase admin --eval "db.getCollectionNames()"
+            register: test
+
+          - name: show collections Output 
+            debug:
+                    msg: "{{ test.stdout }}"

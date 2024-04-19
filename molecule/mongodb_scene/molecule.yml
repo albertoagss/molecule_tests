@@ -17,10 +17,16 @@ platforms:
     published_ports:
             - 3000:27017
           
-  - name: Debian11
-    image: debian/python:11.9
+  - name: Debian11-systemd
+    image: debian/systemd:latest
+    tmpfs:
+            - /run
+            - /tmp
+    volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup
+    cgroupns_mode: host
+    # Para que systemd inicie:
+    command: /sbin/init
+    registry: false
     privileged: true
     pre_build_image: true
-    ansible_python_interpreter: /usr/bin/python3
-    published_ports:
-            - 3030:27017

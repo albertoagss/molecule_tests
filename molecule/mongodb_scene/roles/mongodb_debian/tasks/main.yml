@@ -15,16 +15,27 @@
           url: "https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc"
           state: present
   retries: 3
-  delay: 5
+  delay: 10
 
-- name: Crear list file para MongoDB
-  apt_repository:
-          repo: "deb http://repo.mongodb.org/apt/{{ debian_version }}/mongodb-org/{{ mongodb_version }} main"
-          state: present
+- name: Añadir repositorio
+  become: yes
+  lineinfile:
+          path: "/etc/apt/sources.list.d/mongodb-org-{{ mongodb_version }}.list"
+          line: "deb http://repo.mongodb.org/apt/{{ debian_version }}/mongodb-org/{{ mongodb_version }} main"
+          create: yes
+
+- name: Actualizar repositorios
+  become: yes
+  apt:
+          update_cache: yes
+  retries: 3
+  delay: 10
 
 - name: Instalar MongoDB
   apt:
-          name: mongodb-org
+          name:
+                  - mongodb-org
+                  - mongosh
           state: latest
 
 - name: Instalar PyMongo

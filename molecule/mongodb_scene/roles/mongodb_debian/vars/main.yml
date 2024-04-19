@@ -1,7 +1,7 @@
 ---
 
-mongodb_version: "7.0"
-debian_version: "debian bullseye"
+mongodb_version: "4.4"
+debian_version: "debian buster"
 
 admin_user: "root"
 admin_password: "1234"
