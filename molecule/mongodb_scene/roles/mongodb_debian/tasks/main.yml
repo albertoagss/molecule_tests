@@ -37,6 +37,7 @@
                   - mongodb-org
                   - mongosh
           state: latest
+  register: mongodb_install
 
 - name: Instalar PyMongo
   pip:
@@ -58,3 +59,4 @@
           password: "{{ admin_password }}"
           state: present
           roles: ["root"]
+  when: mongodb_install is changed

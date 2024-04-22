@@ -44,6 +44,7 @@
           protocol: tcp
           destination_port: 27017
           jump: ACCEPT
+  register: open_ports
   when: firewall is failed
 
 #######################################################################
@@ -57,6 +58,7 @@
 
 - name: Crear base de datos (modo cutre)
   command: mongosh "mongodb://{{ admin_user }}:{{ admin_password }}@{{ host }}:{{ port }}/{{ db_name }}" --authenticationDatabase admin --eval "db.createCollection('{{ collection_name }}')"
+  when: open_ports is changed
 
 - name: Crear usuario para conexión remota
   community.mongodb.mongodb_user:
@@ -68,3 +70,4 @@
           state: present
           roles:
                   - readWrite
+  when: open_ports is changed

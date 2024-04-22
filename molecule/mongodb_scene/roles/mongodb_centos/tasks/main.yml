@@ -24,6 +24,7 @@
           state: present
   retries: 3
   delay: 10
+  register: mongodb_install
 
 - name: Instalar PyMongo
   become: yes
@@ -47,4 +48,4 @@
           password: "{{ admin_password }}"
           state: present
           roles: ["root"]
-
+  when: mongodb_install is changed

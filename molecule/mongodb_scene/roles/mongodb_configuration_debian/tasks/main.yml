@@ -34,6 +34,7 @@
 
 - name: Crear base de datos (modo cutre)
   command: mongosh "mongodb://{{ admin_user }}:{{ admin_password }}@{{ host }}:{{ port }}/{{ db_name }}" --authenticationDatabase admin --eval "db.createCollection('{{ collection_name }}')"
+  when: firewall is changed
 
 - name: Crear usuario para conexión remota
   community.mongodb.mongodb_user:
@@ -45,4 +46,4 @@
           state: present
           roles:
                   - readWrite
-  
+  when: firewall is changed
